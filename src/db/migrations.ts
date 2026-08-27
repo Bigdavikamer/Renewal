@@ -36,6 +36,15 @@ const migrations: Migration[] = [
       `);
     },
   },
+  {
+    version: 2,
+    up: async (db) => {
+      // Nullable, no default: existing rows become NULL (no reminder) rather
+      // than silently claiming a reminder is scheduled when nothing actually is.
+      await db.execAsync(`ALTER TABLE subscriptions ADD COLUMN reminderDaysBefore INTEGER;`);
+      await db.execAsync(`ALTER TABLE subscriptions ADD COLUMN reminderNotificationId TEXT;`);
+    },
+  },
 ];
 
 /** Applies every migration newer than the database's current `user_version`, in order. */

@@ -34,6 +34,7 @@ export default function HomeScreen() {
   }, [data.status]);
 
   const goToAddPayment = () => router.push('/add-payment');
+  const goToDetails = (id: string) => router.push({ pathname: '/subscription/[id]', params: { id } });
 
   return (
     <Screen>
@@ -52,6 +53,7 @@ export default function HomeScreen() {
           subscriptions={data.subscriptions}
           staggered={isInitialReveal}
           onAddPayment={goToAddPayment}
+          onOpenDetails={goToDetails}
         />
       )}
     </Screen>
@@ -62,10 +64,12 @@ function HomeContent({
   subscriptions,
   staggered,
   onAddPayment,
+  onOpenDetails,
 }: {
   subscriptions: Subscription[];
   staggered: boolean;
   onAddPayment: () => void;
+  onOpenDetails: (id: string) => void;
 }) {
   const upcoming = sortByNextRenewal(subscriptions);
   const monthlyTotal = getMonthlyTotal(subscriptions);
@@ -87,6 +91,7 @@ function HomeContent({
               key={subscription.id}
               subscription={subscription}
               index={staggered ? CARDS_START_AT + i : 0}
+              onPress={() => onOpenDetails(subscription.id)}
             />
           ))}
         </View>

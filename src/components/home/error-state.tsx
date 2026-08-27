@@ -9,10 +9,12 @@ import { useTheme } from '@/hooks/use-theme';
 type ErrorStateProps = {
   message: string;
   onRetry: () => void;
+  /** Defaults to "Try again" — pass e.g. "Go back" for a not-found case. */
+  retryLabel?: string;
 };
 
 /** Shown only when the very first load fails — database init, or a read error. */
-export function ErrorState({ message, onRetry }: ErrorStateProps) {
+export function ErrorState({ message, onRetry, retryLabel = 'Try again' }: ErrorStateProps) {
   const theme = useTheme();
 
   return (
@@ -23,11 +25,11 @@ export function ErrorState({ message, onRetry }: ErrorStateProps) {
       <AnimatedPressable
         haptic="selection"
         accessibilityRole="button"
-        accessibilityLabel="Try again"
+        accessibilityLabel={retryLabel}
         onPress={onRetry}
         style={styles.retry}>
         <ThemedText variant="body" style={{ color: theme.primary, fontWeight: '700' }}>
-          Try again
+          {retryLabel}
         </ThemedText>
       </AnimatedPressable>
     </Reveal>

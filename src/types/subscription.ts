@@ -18,6 +18,10 @@ export type Subscription = {
   trialEndDate: string | null;
   notes: string | null;
   status: SubscriptionStatus;
+  /** Days before `nextRenewalDate` to send a local reminder. `null` = no reminder. */
+  reminderDaysBefore: number | null;
+  /** The currently-scheduled local notification's id, so it can be canceled precisely. */
+  reminderNotificationId: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -33,4 +37,7 @@ export type SubscriptionInput = {
   trialEndDate?: string | null;
   notes?: string | null;
   status?: SubscriptionStatus;
+  reminderDaysBefore: number | null;
+  /** Not form-driven — set by the reminder-scheduling orchestration after a schedule/cancel call. */
+  reminderNotificationId?: string | null;
 };

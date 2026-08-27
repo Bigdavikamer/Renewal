@@ -62,14 +62,16 @@ export async function createSubscription(input: SubscriptionInput): Promise<Subs
       trialEndDate: input.trialEndDate ?? null,
       notes: input.notes ?? null,
       status: input.status ?? 'active',
+      reminderDaysBefore: input.reminderDaysBefore,
+      reminderNotificationId: input.reminderNotificationId ?? null,
       createdAt: now,
       updatedAt: now,
     };
 
     await db.runAsync(
       `INSERT INTO ${TABLE}
-        (id, name, amount, currency, category, frequency, nextRenewalDate, trialEndDate, notes, status, createdAt, updatedAt)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+        (id, name, amount, currency, category, frequency, nextRenewalDate, trialEndDate, notes, status, reminderDaysBefore, reminderNotificationId, createdAt, updatedAt)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
       subscription.id,
       subscription.name,
       subscription.amount,
@@ -80,6 +82,8 @@ export async function createSubscription(input: SubscriptionInput): Promise<Subs
       subscription.trialEndDate,
       subscription.notes,
       subscription.status,
+      subscription.reminderDaysBefore,
+      subscription.reminderNotificationId,
       subscription.createdAt,
       subscription.updatedAt
     );
