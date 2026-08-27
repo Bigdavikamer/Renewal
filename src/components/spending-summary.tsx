@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
+import { AnimatedCurrency } from '@/components/ui/animated-currency';
 import { Spacing } from '@/constants/theme';
 import { formatCurrency } from '@/utils/currency';
 
@@ -11,29 +11,16 @@ type SpendingSummaryProps = {
 };
 
 export function SpendingSummary({ monthlyTotal, yearlyTotal }: SpendingSummaryProps) {
-  const opacity = useRef(new Animated.Value(0)).current;
-  const translateY = useRef(new Animated.Value(8)).current;
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(opacity, { toValue: 1, duration: 350, useNativeDriver: true }),
-      Animated.timing(translateY, { toValue: 0, duration: 350, useNativeDriver: true }),
-    ]).start();
-  }, [opacity, translateY]);
-
   return (
-    <Animated.View
-      style={{ opacity, transform: [{ translateY }] }}
+    <View
       accessible
       accessibilityLabel={`Your recurring spending: ${formatCurrency(monthlyTotal)} per month, approximately ${formatCurrency(yearlyTotal)} per year.`}>
-      <ThemedText variant="label" color="textMuted">
+      <ThemedText variant="label" color="textMuted" style={styles.eyebrow}>
         Your recurring spending
       </ThemedText>
 
       <View style={styles.amountRow}>
-        <ThemedText variant="hero" style={styles.tabularNums}>
-          {formatCurrency(monthlyTotal)}
-        </ThemedText>
+        <AnimatedCurrency value={monthlyTotal} variant="hero" style={styles.tabularNums} animateFromZero />
         <ThemedText variant="body" color="textSecondary">
           {' '}
           per month
@@ -41,13 +28,17 @@ export function SpendingSummary({ monthlyTotal, yearlyTotal }: SpendingSummaryPr
       </View>
 
       <ThemedText variant="caption" color="textMuted">
-        ≈ {formatCurrency(yearlyTotal)} per year
+        ≈ <AnimatedCurrency value={yearlyTotal} variant="caption" color="textMuted" animateFromZero />{' '}
+        per year
       </ThemedText>
-    </Animated.View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  eyebrow: {
+    textTransform: 'uppercase',
+  },
   amountRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
